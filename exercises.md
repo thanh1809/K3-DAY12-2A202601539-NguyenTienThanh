@@ -3,7 +3,7 @@
 > **Bài làm cá nhân.** Trả lời bằng lời của chính bạn, dựa trên những gì bạn
 > quan sát được khi chạy code — không sao chép đáp án của người khác.
 >
-> Cách trả lời: thay dòng `> *Câu trả lời của bạn*` bằng câu trả lời.
+> Cách trả lời: thay dòng placeholder mẫu bằng câu trả lời.
 > `grade.py` đếm số câu đã trả lời (15 điểm cho 10 câu).
 >
 > Họ và tên: Nguyễn Tiến Thành  Mã học viên: 2A202601539
@@ -119,4 +119,4 @@ Ghi lại **một** lỗi bạn gặp khi deploy lên cloud (build fail, health 
 timeout, sai REDIS_URL, app không đọc `$PORT`...): thông báo lỗi là gì, bạn
 tìm ra nguyên nhân bằng cách nào, và sửa ra sao?
 
-> *Câu trả lời của bạn*
+> Khi làm CP5 trên máy local, mình chưa deploy được cloud vì lệnh `railway --version` báo `railway : The term 'railway' is not recognized...`, nghĩa là máy chưa có Railway CLI trong PATH và cũng chưa có session đăng nhập Railway/Render để tạo public URL. Mình kiểm tra nguyên nhân bằng terminal, sau đó dùng phương án dự phòng của lab: đặt `LOCAL_FALLBACK=true`, chạy `docker compose up -d --build`, kiểm tra `/health` trả 200, `/ready` trả 200 và `/ask` không có API key trả 401. Nếu deploy thật, bước cần làm tiếp là đăng nhập Railway/Render, set `AGENT_API_KEY` và `REDIS_URL` trên dashboard rồi điền Public URL thật vào `DEPLOYMENT.md`.
