@@ -14,8 +14,8 @@
 
 | Mục | Nội dung |
 |-----|----------|
-| Public URL | Chưa có public cloud URL; đang dùng local fallback tại `http://localhost:8000` |
-| Platform | Local fallback bằng Docker Compose; cấu hình cloud đã chuẩn bị cho Railway / Render |
+| Public URL | https://day12-agent-u763.onrender.com |
+| Platform | Render |
 | Ngày deploy | 2026-08-10 |
 
 ## Biến Môi Trường Đã Set
@@ -24,31 +24,25 @@ Ghi tên biến và nguồn giá trị, không ghi giá trị secret:
 
 | Biến | Đã set | Ghi chú |
 |------|--------|---------|
-| `PORT` | Có | Docker Compose/platform gán, mặc định 8000 khi chạy local |
+| `PORT` | Có | Render tự gán |
 | `AGENT_API_KEY` | Có | đặt trong `.env` local hoặc dashboard cloud, không nằm trong repo |
-| `REDIS_URL` | Có | local fallback dùng `redis://redis:6379/0` trong Docker Compose |
+| `REDIS_URL` | Có | Render Key Value `day12-redis`, lấy từ `render.yaml` |
 | `RATE_LIMIT_PER_MINUTE` | Có | 10 |
 | `MONTHLY_BUDGET_USD` | Có | 10.0 |
 | `LOG_LEVEL` | Có | INFO |
-| `LOCAL_FALLBACK` | Có | `true` trong `.env` local để CP5 kiểm tra localhost |
+| `LOCAL_FALLBACK` | Có | `false` trong `.env` local để CP5 kiểm tra public URL |
 
 ## Lệnh Kiểm Tra Đã Chạy
 
 ```powershell
-docker compose up -d --build
-docker compose ps
-curl.exe -i http://localhost:8000/health
-curl.exe -i http://localhost:8000/ready
-.\.venv\Scripts\python.exe -c "import httpx; r=httpx.post('http://localhost:8000/ask', json={'question':'Hello'}, timeout=20); print(r.status_code, r.text)"
+curl.exe -i https://day12-agent-u763.onrender.com/health
+curl.exe -i https://day12-agent-u763.onrender.com/ready
+.\.venv\Scripts\python.exe -c "import httpx; r=httpx.post('https://day12-agent-u763.onrender.com/ask', json={'question':'Hello'}, timeout=60); print(r.status_code, r.text)"
 ```
 
 ## Kết Quả Chạy Thật
 
 ```text
-docker compose ps:
-agent: Up, port 0.0.0.0:8000->8000/tcp
-redis: Up, healthy, port 0.0.0.0:6379->6379/tcp
-
 GET /health:
 HTTP/1.1 200 OK
 {"status":"ok","service":"day12-agent","version":"1.0.0"}
@@ -63,10 +57,10 @@ POST /ask without API key:
 
 ## Ảnh Chụp Màn Hình
 
-Ảnh local fallback đã đặt tại:
+Ảnh kiểm tra deploy đã đặt tại:
 
 - `screenshots/local-fallback.png`
 
 ## Nếu Dùng Phương Án Dự Phòng
 
-Lý do dùng phương án dự phòng: máy hiện chưa có Railway CLI trong PATH và không có session đăng nhập Railway/Render để tạo public HTTPS URL thật từ dòng lệnh. Stack local bằng Docker Compose đã chạy được, `/health` và `/ready` đều trả 200, `/ask` không có API key trả 401.
+Không dùng phương án dự phòng. Service đã deploy lên Render tại `https://day12-agent-u763.onrender.com`; `/health` và `/ready` đều trả 200, `/ask` không có API key trả 401.
